@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grenkart - User Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .user-section {
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .user-section h2 {
+            color: #00b000;
+            margin-bottom: 15px;
+        }
+        .shop, .product, .order {
+            flex: 1 1 calc(33.33% - 10px); /* Show 3 items per row */
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .shop img, .product img {
+            max-width: 100%;
+            border-radius: 5px;
+        }
+        .shops-list, .orders-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .btn-search {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            background-color: #00b000;
+            transition: background-color 0.3s ease;
+        }
+        .btn-search:hover {
+            background-color: #008000;
+        }
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            background-color: #00b000;
+            padding: 10px 0;
+        }
+        .bottom-nav a {
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            font-size: 18px;
+        }
+        .bottom-nav a.active {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <section class="user-section">
+        <h2>Explore Shops Near You</h2>
+        <input type="text" id="search-bar" placeholder="Search shops by name..." style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ddd; margin-bottom: 15px;" oninput="filterShops()">
+        <button class="btn-search" onclick="filterShops()">Search</button>
+    </section>
+
+    <section class="user-section">
+        <h2>Available Shops</h2>
+        <div id="shops-list" class="shops-list">
+            <!-- Dynamic list of shops with updated details -->
+        </div>
+    </section>
+
+    <section class="user-section" id="orders">
+        <h2>My Orders</h2>
+        <div id="user-orders-list" class="orders-list">
+            <!-- Dynamic list of user orders -->
+        </div>
+    </section>
+
+    <section class="user-section" id="Account">
+        <h2>My Account</h2>
+        <div class="account-details">
+            <p><strong>Name:</strong> <input type="text" id="user-name" value="[User's Name]"></p>
+            <p><strong>Email:</strong> <input type="email" id="user-email" value="[User's Email]"></p>
+            <p><strong>Contact Number:</strong> <input type="text" id="user-contact" value="[User's Contact Number]"></p>
+            <button class="btn-update" onclick="updateAccount()">Update Details</button>
+            <button class="btn-logout" onclick="logout()">Log Out</button>
+        </div>
+    </section>
+
+    <section class="user-section" id="about">
+        <h2>About Grenkart</h2>
+        <p>Grenkart is an eco-friendly e-commerce platform where you can buy sustainable products that are good for you and the planet. Explore shops near you and enjoy green shopping!</p>
+    </section>
+
+    <nav class="bottom-nav">
+        <a href="user_dashboard.html" class="active">Home</a>
+        <a href="#orders">My Orders</a>
+        <a href="#about">About</a>
+        <a href="#Account">My Account</a>
+    </nav>
+
+    <script>
+        const shops = [
+            {
+                name: 'Adi Nursery',
+                contact: '9876543219',
+                address: 'Near KV Tagore Garden, Gate No.2, New Delhi',
+                products: [
+                    { name: 'Sunflower', price: 170, quantity: 50 },
+                    { name: 'White Rose', price: 150, quantity: 50 },
+                    { name: 'Black Rose', price: 380, quantity: 50 },
+                    { name: 'Tulsi', price: 60, quantity: 50 }
+                ]
+            },
+            {
+                name: 'Ayush Nursery',
+                contact: '8287372812',
+                address: 'Kashmere Gate Metro Station, New Delhi',
+                products: [
+                    { name: 'Peace Lily', price: 200, quantity: 50 },
+                    { name: 'Snake Plant', price: 150, quantity: 50 },
+                    { name: 'Pothos', price: 100, quantity: 50 },
+                    { name: 'Aloe Vera', price: 50, quantity: 50 },
+                    { name: 'Ficus elastica', price: 300, quantity: 50 }
+                ]
+            },
+            {
+                name: 'Evergreen Nursery',
+                contact: '9876543219',
+                address: 'Near Faridabad',
+                products: [
+                    { name: 'Sunflower', price: 170, quantity: 50 },
+                    { name: 'Rose', price: 150, quantity: 50 },
+                    { name: 'Mogra', price: 150, quantity: 50 },
+                    { name: 'Tulsi', price: 60, quantity: 50 }
+                ]
+            },
+            {
+                name: 'Blossom Haven',
+                contact: '1234567890',
+                address: '123 Blossom Street, New Delhi',
+                products: [
+                    { name: 'Jasmine', price: 120, quantity: 40 },
+                    { name: 'Lily', price: 200, quantity: 30 },
+                    { name: 'Orchid', price: 250, quantity: 25 },
+                    { name: 'Cactus', price: 80, quantity: 60 }
+                ]
+            }
+        ];
+
+        function loadShops() {
+            const shopsList = document.getElementById('shops-list');
+            shopsList.innerHTML = '';
+
+            shops.forEach(shop => {
+                const shopDiv = document.createElement('div');
+                shopDiv.classList.add('shop');
+                
+                let productsHTML = '';
+                shop.products.forEach(product => {
+                    productsHTML += `
+                        <div class="product">
+                            <h4>${product.name}</h4>
+                            <p>Price: ₹${product.price}</p>
+                            <p>Available Quantity: ${product.quantity}</p>
+                            <button onclick="buyProduct('${shop.name}', '${product.name}', ${product.price}, ${product.quantity})">Buy</button>
+                        </div>
+                    `;
+                });
+
+                shopDiv.innerHTML = `
+                    <h3>${shop.name}</h3>
+                    <p>Contact: ${shop.contact}</p>
+                    <p>Address: ${shop.address}</p>
+                    <div class="products-list">${productsHTML}</div>
+                `;
+                shopsList.appendChild(shopDiv);
+            });
+        }
+
+        function filterShops() {
+            const query = document.getElementById('search-bar').value.toLowerCase();
+            const filteredShops = shops.filter(shop =>
+                shop.name.toLowerCase().includes(query)
+            );
+
+            const shopsList = document.getElementById('shops-list');
+            shopsList.innerHTML = '';
+
+            filteredShops.forEach(shop => {
+                const shopDiv = document.createElement('div');
+                shopDiv.classList.add('shop');
+                
+                let productsHTML = '';
+                shop.products.forEach(product => {
+                    productsHTML += `
+                        <div class="product">
+                            <h4>${product.name}</h4>
+                            <p>Price: ₹${product.price}</p>
+                            <p>Available Quantity: ${product.quantity}</p>
+                            <button onclick="buyProduct('${shop.name}', '${product.name}', ${product.price}, ${product.quantity})">Buy</button>
+                        </div>
+                    `;
+                });
+
+                shopDiv.innerHTML = `
+                    <h3>${shop.name}</h3>
+                    <p>Contact: ${shop.contact}</p>
+                    <p>Address: ${shop.address}</p>
+                    <div class="products-list">${productsHTML}</div>
+                `;
+                shopsList.appendChild(shopDiv);
+            });
+        }
+
+        function buyProduct(shopName, productName, price, availableQuantity) {
+            const quantity = prompt(`Enter the quantity for ${productName} (Available: ${availableQuantity}):`);
+            if (quantity && !isNaN(quantity) && quantity > 0 && quantity <= availableQuantity) {
+                const total = price * quantity;
+                if (confirm(`Do you want to purchase ${quantity} of ${productName} for ₹${total}?`)) {
+                    // Update shop data
+                    const shop = shops.find(shop => shop.name === shopName);
+                    const product = shop.products.find(p => p.name === productName);
+                    product.quantity -= quantity;
+
+                    // Update the UI
+                    loadShops();
+                    addToOrders(shopName, productName, price, quantity, total);
+                }
+            } else {
+                alert('Invalid quantity.');
+            }
+        }
+
+        function addToOrders(shopName, productName, price, quantity, total) {
+            const order = {
+                shopName,
+                productName,
+                price,
+                quantity,
+                total,
+                user: {
+                    name: document.getElementById('user-name').value,
+                    contact: document.getElementById('user-contact').value
+                }
+            };
+
+            // Save order to localStorage
+            const orders = JSON.parse(localStorage.getItem('userOrders')) || [];
+            orders.push(order);
+            localStorage.setItem('userOrders', JSON.stringify(orders));
+
+            // Update the user's orders list
+            const ordersList = document.getElementById('user-orders-list');
+            const orderDiv = document.createElement('div');
+            orderDiv.classList.add('order');
+
+            orderDiv.innerHTML = `
+                <h4>Order from ${shopName}</h4>
+                <p><strong>Product:</strong> ${productName}</p>
+                <p><strong>Price:</strong> ₹${price}</p>
+                <p><strong>Quantity:</strong> ${quantity}</p>
+                <p><strong>Total:</strong> ₹${total}</p>
+                <p><strong>Customer Name:</strong> ${order.user.name}</p>
+                <p><strong>Contact:</strong> ${order.user.contact}</p>
+            `;
+            ordersList.appendChild(orderDiv);
+        }
+
+        function updateAccount() {
+            const name = document.getElementById('user-name').value;
+            const email = document.getElementById('user-email').value;
+            const contact = document.getElementById('user-contact').value;
+
+            if (name && email && contact) {
+                // Update user details in localStorage
+                localStorage.setItem('userDetails', JSON.stringify({ name, email, contact }));
+                alert('Details updated successfully!');
+            } else {
+                alert('Please fill in all fields.');
+            }
+        }
+
+        function logout() {
+            window.location.href = 'index.html';
+        }
+
+        window.onload = loadShops;
+    </script>
+</body>
+</html>

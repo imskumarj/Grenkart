@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grenkart - Login</title>
+    <style>
+        body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f4f4; /* Light background for contrast */
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-container {
+    background-color: white;
+    padding: 20px 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 300px;
+}
+
+.login-container h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.login-container input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.login-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #00b000; /* Eco-friendly green */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-weight: 600;
+}
+
+.login-container button:hover {
+    background-color: #008f00; /* Darker green on hover */
+}
+
+.login-container a {
+    color: #00b000;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-container a:hover {
+    text-decoration: underline;
+}
+
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyBohCddAirBIwBjxQwSOZysLo619dXwZW4",
+          authDomain: "grenkart-web.firebaseapp.com",
+          projectId: "grenkart-web",
+          storageBucket: "grenkart-web.appspot.com",
+          messagingSenderId: "284997831220",
+          appId: "1:284997831220:web:c86ea269064ada657b9861",
+          measurementId: "G-7L1FZ1C7G9"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginForm = document.getElementById('loginForm');
+
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const email = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+
+                try {
+                    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                    const user = userCredential.user;
+                    console.log("User signed in:", user);
+                    window.location.href = 'role-selection.html';
+                } catch (error) {
+                    console.error("Error signing in:", error.message);
+                    alert("Login failed. Please check your credentials and try again.");
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login to Grenkart</h2>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Username or Email" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+        <p>Don't have an account? <a href="register.html">Register here</a></p>
+    </div>
+</body>
+</html>

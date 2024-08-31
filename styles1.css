@@ -1,0 +1,95 @@
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+.splash-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: white;
+    color: white;
+}
+
+.logo {
+    max-width: 500px;
+    max-height: 500px;
+    width: auto;
+    height: auto;
+    margin-bottom: 0;
+    margin-top: -50px;
+    opacity: 0; /* Start with opacity 0 for animation */
+    animation: popup 1s ease-out forwards, fadeOut 1s ease-out 3s forwards; /* Trigger popup and fade-out animations */
+}
+
+/* Popup animation */
+@keyframes popup {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Fade-out animation */
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+/* Button styles */
+button {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    background-color: #00b000;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: -50px;
+}
+
+/* Button hover effect */
+button:hover {
+    background-color: #6bff6b;
+}
+
+/* Other styles */
+.login-container, .user-dashboard, .seller-dashboard {
+    padding: 20px;
+    text-align: center;
+}
+
+.products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+.product-item {
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+input, button {
+    padding: 10px;
+    font-size: 16px;
+}

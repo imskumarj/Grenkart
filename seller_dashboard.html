@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Dashboard</title>
+    <style>
+        /* Basic reset and styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+}
+
+#shopDetailsDisplay,
+#shopDetailsForm {
+    margin-bottom: 20px;
+}
+
+#shopDetailsDisplay p {
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+#shopDetailsForm label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+#shopDetailsForm input {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #00b000;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #009000;
+}
+
+.nav-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #00b000;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+}
+
+.nav-bar button {
+    background-color: #fff;
+    color: #00b000;
+    border: 1px solid #00b000;
+}
+
+.nav-bar button:hover {
+    background-color: #00a000;
+    color: #fff;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Seller Dashboard</h1>
+        
+        <div id="shopDetailsDisplay">
+            <h2>Current Shop Details</h2>
+            <p id="displayShopName">Shop Name: Default Shop Name</p>
+            <p id="displayShopAddress">Address: Default Address</p>
+            <p id="displayShopContact">Contact: Default Contact</p>
+        </div>
+
+        <div id="shopDetailsForm">
+            <h2>Update Shop Details</h2>
+            <form>
+                <label for="shopName">Shop Name:</label>
+                <input type="text" id="shopName" name="shopName" required><br>
+
+                <label for="shopAddress">Address:</label>
+                <input type="text" id="shopAddress" name="shopAddress" required><br>
+
+                <label for="shopContact">Contact:</label>
+                <input type="text" id="shopContact" name="shopContact" required><br>
+
+                <button type="button" id="updateShopButton">Update Shop Details</button>
+            </form>
+        </div>
+
+        <div class="nav-bar">
+            <button id="homeButton">Home</button>
+            <button id="manageProductsButton">Manage Products</button>
+            <button id="ordersButton">Orders</button>
+            <button id="logoutButton">Logout</button>
+        </div>
+    </div>
+
+    <script>
+        // Local storage key
+const SHOP_DETAILS_KEY = 'shopDetails';
+
+// Initialize shop details with default values
+let shopDetails = {
+    name: 'Default Shop Name',
+    address: 'Default Address',
+    contact: 'Default Contact'
+};
+
+// Load shop details from local storage or use defaults
+function loadShopDetails() {
+    const savedDetails = localStorage.getItem(SHOP_DETAILS_KEY);
+    if (savedDetails) {
+        shopDetails = JSON.parse(savedDetails);
+    }
+
+    // Update form fields
+    document.getElementById('shopName').value = shopDetails.name;
+    document.getElementById('shopAddress').value = shopDetails.address;
+    document.getElementById('shopContact').value = shopDetails.contact;
+
+    // Update display section
+    document.getElementById('displayShopName').textContent = `Shop Name: ${shopDetails.name}`;
+    document.getElementById('displayShopAddress').textContent = `Address: ${shopDetails.address}`;
+    document.getElementById('displayShopContact').textContent = `Contact: ${shopDetails.contact}`;
+}
+
+// Update shop details and save to local storage
+function updateShopDetails() {
+    shopDetails.name = document.getElementById('shopName').value;
+    shopDetails.address = document.getElementById('shopAddress').value;
+    shopDetails.contact = document.getElementById('shopContact').value;
+
+    // Save to local storage
+    localStorage.setItem(SHOP_DETAILS_KEY, JSON.stringify(shopDetails));
+    
+    // Update display section
+    document.getElementById('displayShopName').textContent = `Shop Name: ${shopDetails.name}`;
+    document.getElementById('displayShopAddress').textContent = `Address: ${shopDetails.address}`;
+    document.getElementById('displayShopContact').textContent = `Contact: ${shopDetails.contact}`;
+
+    alert('Shop details updated successfully!');
+}
+
+// Event listeners
+document.getElementById('updateShopButton').addEventListener('click', updateShopDetails);
+
+// Load shop details on page load
+window.onload = loadShopDetails;
+
+document.getElementById('manageProductsButton').addEventListener('click', function() {
+    window.location.href = 'manage-products.html'; // Replace with the path to your destination page
+});
+
+document.getElementById('logoutButton').addEventListener('click', function() {
+    window.location.href = 'index.html'; // Replace with the path to your destination page
+});
+
+document.getElementById('ordersButton').addEventListener('click', function() {
+    window.location.href = 'orders.html'; // Replace with the path to your destination page
+});
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grenkart - Manage Products</title>
+    <style>
+        /* Reset default margin and padding for better consistency */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f9f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.product-section {
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 800px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.product-section h2 {
+    color: #00b000;
+    margin-bottom: 15px;
+    font-size: 24px;
+}
+
+.product-section input[type="text"],
+.product-section input[type="number"] {
+    width: calc(100% - 22px);
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.product-section button {
+    background-color: #00b000;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px;
+}
+
+.product-section button:hover {
+    background-color: #008000;
+}
+
+.product {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.product button {
+    background-color: #f44336; /* Red for Remove */
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    margin-right: 10px;
+}
+
+.product button:hover {
+    background-color: #d32f2f;
+}
+
+.product button:last-of-type {
+    background-color: #2196F3; /* Blue for Update */
+}
+
+.product button:last-of-type:hover {
+    background-color: #1976D2;
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    background-color: #00b000;
+    padding: 10px 0;
+}
+
+.bottom-nav a {
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    font-size: 18px;
+    padding: 10px 15px;
+    transition: background-color 0.3s ease;
+}
+
+.bottom-nav a.active {
+    font-weight: bold;
+    background-color: #007a00;
+    border-radius: 5px;
+}
+
+.bottom-nav a:hover {
+    background-color: #007a00;
+}
+
+    </style>
+</head>
+<body>
+    <section class="product-section">
+        <h2>Manage Products</h2>
+        <input type="text" id="product-name" placeholder="Product Name">
+        <input type="number" id="product-price" placeholder="Price (in ₹)">
+        <input type="number" id="product-quantity" placeholder="Quantity">
+        <button onclick="addProduct()">Add Product</button>
+        <div id="products-list">
+            <!-- Dynamic list of products will appear here -->
+        </div>
+    </section>
+
+    <nav class="bottom-nav">
+        <a href="seller_dashboard.html">Dashboard</a>
+        <a href="manage-products.html" class="active">Manage Products</a>
+        <a href="orders.html">Orders</a>
+    </nav>
+
+    <script>
+        const products = JSON.parse(localStorage.getItem('products')) || [];
+
+        function loadProducts() {
+            const productsList = document.getElementById('products-list');
+            productsList.innerHTML = '';
+
+            products.forEach((product, index) => {
+                const productDiv = document.createElement('div');
+                productDiv.classList.add('product');
+                productDiv.innerHTML = `
+                    <h4>${product.name}</h4>
+                    <p><strong>Price:</strong> ₹${product.price}</p>
+                    <p><strong>Quantity:</strong> ${product.quantity}</p>
+                    <button onclick="removeProduct(${index})">Remove</button>
+                    <button onclick="updateProduct(${index})">Update</button>
+                `;
+                productsList.appendChild(productDiv);
+            });
+        }
+
+        function addProduct() {
+            const name = document.getElementById('product-name').value;
+            const price = document.getElementById('product-price').value;
+            const quantity = document.getElementById('product-quantity').value;
+
+            if (name && price && quantity) {
+                products.push({ name, price, quantity });
+                localStorage.setItem('products', JSON.stringify(products));
+                loadProducts();
+            } else {
+                alert('Please fill all fields.');
+            }
+        }
+
+        function removeProduct(index) {
+            products.splice(index, 1);
+            localStorage.setItem('products', JSON.stringify(products));
+            loadProducts();
+        }
+
+        function updateProduct(index) {
+            const newName = prompt('Enter new name:', products[index].name);
+            const newPrice = prompt('Enter new price:', products[index].price);
+            const newQuantity = prompt('Enter new quantity:', products[index].quantity);
+
+            if (newName && newPrice && newQuantity) {
+                products[index] = { name: newName, price: newPrice, quantity: newQuantity };
+                localStorage.setItem('products', JSON.stringify(products));
+                loadProducts();
+            }
+        }
+
+        window.onload = loadProducts;
+    </script>
+</body>
+</html>
